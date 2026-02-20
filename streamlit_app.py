@@ -15,25 +15,46 @@ st.markdown("Automating data ingestion, transformation, and warehousing in real-
 # Sidebar Controls
 with st.sidebar:
     st.header("🎮 Pipeline Controls")
-    run_btn = st.button("🚀 Trigger ETL Pipeline", type="primary", use_container_width=True)
+    
+    # Live Stream Toggle
+    if 'is_streaming' not in st.session_state:
+        st.session_state.is_streaming = False
+        
+    streaming_toggle = st.toggle("🛰️ Live Stream Mode", value=st.session_state.is_streaming)
+    st.session_state.is_streaming = streaming_toggle
+    
+    st.divider()
+    
+    if not st.session_state.is_streaming:
+        run_btn = st.button("🚀 Trigger ETL Pipeline", type="primary", use_container_width=True)
+    else:
+        st.warning("Streaming active: Pipeline will run every 10s.")
+        run_btn = False
     
     st.divider()
     st.info("Source: JSONPlaceholder API")
     st.info("Target: SQLite Warehouse")
 
 # 3. Main Logic
-if run_btn:
-    with st.status("Pipeline Executing...", expanded=True) as status:
+def execute_etl():
+    with st.status("Pipeline Executing...", expanded=False) as status:
         st.write("🔍 Extracting raw data from API...")
-        # Note: We call our existing logic
         try:
             run_pipeline()
-            st.write("✨ Transformation logic applied: Schema flattening and enrichment.")
-            st.write("💾 Loading refined data into SQLite warehouse...")
-            status.update(label="✅ Pipeline Execution Successful!", state="complete", expanded=False)
+            st.write("✨ Transformation applied.")
+            st.write("💾 Loading to Warehouse...")
+            status.update(label=f"✅ Last Run: {time.strftime('%H:%M:%S')}", state="complete")
+            return True
         except Exception as e:
             st.error(f"Pipeline Failed: {e}")
-            status.update(label="❌ Pipeline Error", state="error")
+            return False
+
+if run_btn or st.session_state.is_streaming:
+    execute_etl()
+    if st.session_state.is_streaming:
+        time.sleep(10)
+        st.rerun()
+
 
 # 4. Data Visualization
 if os.path.exists(DB_PATH):

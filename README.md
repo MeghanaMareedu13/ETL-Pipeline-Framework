@@ -73,7 +73,9 @@ graph TD
 ## 📽️ Live ETL Dashboard (Streamlit Integration)
 To provide a "Live View" of the pipeline, I've added a **Streamlit Dashboard** that allows you to:
 - **Trigger the Pipeline**: Manually kick off an ETL run from the UI.
-- **Visual Log Updates**: See the step-by-step progress of the execution.
+- **Satellite Live Stream Mode**: Toggle automated ingestion to run every 10 seconds—perfect for real-time monitoring simulations.
+- **Visual Log Updates**: See the step-by-step progress of the execution with live timestamps.
+
 - **Data Visualization**: Directly query the resulting SQLite warehouse and see KPI metrics (Record counts, geolocation stats, etc.).
 
 ## 🏃 How to Run & Verify

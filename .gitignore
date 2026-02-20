@@ -1,0 +1,15 @@
+# Keep interview prep local
+INTERVIEW_OVERVIEW.md
+
+# Database files
+*.db
+
+# Logs
+*.log
+
+# Python
+__pycache__/
+*.pyc
+
+# Data cache
+data/
